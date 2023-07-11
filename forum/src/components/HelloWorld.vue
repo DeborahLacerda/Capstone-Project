@@ -1,44 +1,92 @@
-<script setup>
-defineProps({
-  msg: {
-    type: String,
-    required: true
-  }
-})
-</script>
-
 <template>
-  <div class="greetings">
-    <h1 class="green">{{ msg }}</h1>
-    <h3>
-      You’ve successfully created a project with
-      <a href="https://vitejs.dev/" target="_blank" rel="noopener">Vite</a> +
-      <a href="https://vuejs.org/" target="_blank" rel="noopener">Vue 3</a>.
-    </h3>
-  </div>
+  <a-comment>
+    <template #actions>
+      <span key="comment-basic-like">
+        <a-tooltip title="Like">
+          <template v-if="action === 'liked'">
+            <LikeFilled @click="like" />
+          </template>
+          <template v-else>
+            <LikeOutlined @click="like" />
+          </template>
+        </a-tooltip>
+        <span style="padding-left: 8px; cursor: auto">
+          {{ likes }}
+        </span>
+      </span>
+      <span key="comment-basic-dislike">
+        <a-tooltip title="Dislike">
+          <template v-if="action === 'disliked'">
+            <DislikeFilled @click="dislike" />
+          </template>
+          <template v-else>
+            <DislikeOutlined @click="dislike" />
+          </template>
+        </a-tooltip>
+        <span style="padding-left: 8px; cursor: auto">
+          {{ dislikes }}
+        </span>
+      </span>
+      <span key="comment-basic-reply-to">Reply to</span>
+    </template>
+    <template #author><a>Han Solo</a></template>
+    <template #avatar>
+      <a-avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />
+    </template>
+    <template #content>
+      <p>
+        We supply a series of design principles, practical patterns and high
+        quality design resources (Sketch and Axure), to help people create their
+        product prototypes beautifully and efficiently.
+      </p>
+    </template>
+    <template #datetime>
+      <a-tooltip :title="dayjs().format('YYYY-MM-DD HH:mm:ss')">
+        <span>{{ dayjs().fromNow() }}</span>
+      </a-tooltip>
+    </template>
+  </a-comment>
 </template>
-
-<style scoped>
-h1 {
-  font-weight: 500;
-  font-size: 2.6rem;
-  position: relative;
-  top: -10px;
-}
-
-h3 {
-  font-size: 1.2rem;
-}
-
-.greetings h1,
-.greetings h3 {
-  text-align: center;
-}
-
-@media (min-width: 1024px) {
-  .greetings h1,
-  .greetings h3 {
-    text-align: left;
-  }
-}
-</style>
+<script>
+import dayjs from "dayjs";
+import {
+  LikeFilled,
+  LikeOutlined,
+  DislikeFilled,
+  DislikeOutlined,
+} from "@ant-design/icons-vue";
+import { defineComponent, ref } from "vue";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
+export default defineComponent({
+  components: {
+    LikeFilled,
+    LikeOutlined,
+    DislikeFilled,
+    DislikeOutlined,
+  },
+  setup() {
+    const likes = ref(0);
+    const dislikes = ref(0);
+    const action = ref();
+    const like = () => {
+      likes.value = 1;
+      dislikes.value = 0;
+      action.value = "liked";
+    };
+    const dislike = () => {
+      likes.value = 0;
+      dislikes.value = 1;
+      action.value = "disliked";
+    };
+    return {
+      likes,
+      dislikes,
+      action,
+      like,
+      dislike,
+      dayjs,
+    };
+  },
+});
+</script>
