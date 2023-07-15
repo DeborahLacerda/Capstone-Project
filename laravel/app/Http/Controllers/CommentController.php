@@ -15,14 +15,14 @@ class CommentController extends Controller
         return response()->json($comments, 200);
     }
 
-    public function getPost($id)
+    public function getComment($id)
     {
         $comment = Comment::find($id);
 
         return response()->json($comment, 200);
     }
 
-    public function createPost()
+    public function createComment()
     {
         $comment = new Comment();
 
@@ -35,7 +35,7 @@ class CommentController extends Controller
         return response()->json($comment, 201);
     }
 
-    public function updatePost($id)
+    public function updateComment($id)
     {
         $comment = Comment::find($id);
 
@@ -48,7 +48,7 @@ class CommentController extends Controller
         return response()->json($comment, 200);
     }
 
-    public function destroyPost($id)
+    public function destroyComment($id)
     {
         $comment = Comment::find($id);
         $comment->delete();
