@@ -2,57 +2,51 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CommentsResource;
 use App\Models\Comment;
-
+use App\Models\Post;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    public function index()
+    public function index(Post $post)
     {
-        $comments = Comment::all();
-
-        return response()->json($comments, 200);
+        return CommentsResource::collection($post->comments);
     }
 
-    public function getComment($id)
-    {
-        $comment = Comment::find($id);
 
-        return response()->json($comment, 200);
+    public function store(Request $request, Post $post)
+    {
+        $comment = Comment::create(
+            [
+                'user_id' => $request->user()->id,
+                'post_id' => $post->id,
+                'content' => $request->content
+            ]
+        );
+
+        return new CommentsResource($comment);
     }
 
-    public function createComment()
-    {
-        $comment = new Comment();
-
-        $comment->content = request('content');
-        $comment->user_id = request('user_id');
-        $comment->post_id = request('post_id');
-
-        $comment->save();
-
-        return response()->json($comment, 201);
-    }
-
-    public function updateComment($id)
+    public function update(Request $request, string $id)
     {
         $comment = Comment::find($id);
 
-        $comment->content = request('content');
-        $comment->user_id = request('user_id');
-        $comment->post_id = request('post_id');
+        if ($request->user()->id !== $comment->user_id) {
+            return response()->json(['error' => 'You can only edit your own comments.'], 403);
+        }
 
-        $comment->save();
+        $comment->update($request->only(['content']));
 
-        return response()->json($comment, 200);
+        return new CommentsResource($comment);
     }
 
-    public function destroyComment($id)
+
+    public function destroy(string $id)
     {
         $comment = Comment::find($id);
         $comment->delete();
 
-        return response()->json($comment, 200);
+        return new CommentsResource($comment);
     }
 }
