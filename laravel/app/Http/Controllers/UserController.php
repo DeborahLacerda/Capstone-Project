@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -11,47 +12,41 @@ class UserController extends Controller
     {
         $users = User::all();
 
-        return response()->json($users, 200);
+        return UserResource::collection($users);
     }
 
-    public function getUser($id)
+    public function show(string $id)
     {
         $user = User::find($id);
 
-        return response()->json($user, 200);
+        return new UserResource($user);
     }
 
-    public function createUser()
+    public function store(Request $request)
     {
-        $user = new User();
+        $user = User::create([
+            'name' => $request->name,
+            'password' => $request->password,
+            'email' => $request->email,
+        ]);
 
-        $user->name = request('name');
-        $user->email = request('email');
-        $user->password = request('password');
-
-        $user->save();
-
-        return response()->json($user, 201);
+        return new UserResource($user);
     }
 
-    public function updateUser($id)
+    public function update(Request $request, string $id)
     {
         $user = User::find($id);
 
-        $user->name = request('name');
-        $user->email = request('email');
-        $user->password = request('password');
+        $user->update($request->only(['name', 'email']));
 
-        $user->save();
-
-        return response()->json($user, 200);
+        return new UserResource($user);
     }
 
-    public function destroyUser($id)
+    public function destroy(string $id)
     {
         $user = User::find($id);
         $user->delete();
 
-        return response()->json($user, 200);
+        return new UserResource($user);
     }
 }
