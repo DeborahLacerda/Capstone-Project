@@ -1,8 +1,4 @@
-<script>
-export default {
-  name: "TheWelcome",
-};
-</script>
+<script></script>
 
 <script setup></script>
 

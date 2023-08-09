@@ -1,34 +1,36 @@
-<script setup></script>
+<script>
+import Navbar from "./components/Navbar.vue";
+
+export default {
+  components: {
+    Navbar,
+  },
+};
+</script>
 
 <template>
-  <router-view />
+  <a-layout class="site-layout-content">
+    <a-layout-header>
+      <Navbar />
+    </a-layout-header>
+
+    <a-layout-content class="content">
+      <router-view />
+    </a-layout-content>
+  </a-layout>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
+.site-layout-content {
+  min-height: 100vh;
+  padding: 0 0 24px 0;
+  background: #f1f1f1;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+.content {
+  padding: "24px";
+  min-height: "280px";
+  margin: 20px;
+  padding: 20px;
 }
 </style>
