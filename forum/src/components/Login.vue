@@ -2,7 +2,7 @@
 export default {
   data: () => ({
     formState: {
-      username: "",
+      email: "",
       password: "",
     },
   }),
@@ -12,6 +12,15 @@ export default {
     },
     onFinish(values) {
       console.log("Success:", values);
+    },
+    goToRegister() {
+      this.$router.push({ path: "/register" }).then((res) => {
+        if (res) {
+          this.$router.push({
+            path: "/",
+          });
+        }
+      });
     },
   },
 };
@@ -29,11 +38,11 @@ export default {
       @finishFailed="onFinishFailed"
     >
       <a-form-item
-        label="Username"
-        name="username"
-        :rules="[{ required: true, message: 'Please input your username!' }]"
+        label="Email"
+        name="email"
+        :rules="[{ required: true, message: 'Please input your email!' }]"
       >
-        <a-input v-model:value="formState.username" />
+        <a-input v-model:value="formState.email" />
       </a-form-item>
 
       <a-form-item
@@ -45,7 +54,13 @@ export default {
       </a-form-item>
 
       <a-form-item>
-        <a-button type="primary" html-type="submit">Submit</a-button>
+        <a-button
+          type="primary"
+          html-type="submit"
+          @click="$emit('loginForm', formState)"
+          >Submit</a-button
+        >
+        <a-button type="link" @click="goToRegister()">Register now!</a-button>
       </a-form-item>
     </a-form>
   </div>

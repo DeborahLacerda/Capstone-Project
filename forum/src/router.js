@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "../src/views/Home.vue";
 import CreatePost from "../src/views/CreatePost.vue";
+import CreateUser from "../src/views/CreateUser.vue";
 import DetailsPost from "../src/views/DetailsPost.vue";
 import Login from "../src/views/Login.vue";
 
@@ -22,6 +23,10 @@ export default createRouter({
     {
       path: "/login",
       component: Login,
+    },
+    {
+      path: "/register",
+      component: CreateUser,
     },
   ],
 });

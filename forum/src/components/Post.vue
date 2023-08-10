@@ -50,12 +50,7 @@ export default {
         <p>
           {{ post.content }}
         </p>
-        <a-button
-          v-if="this.$route.params.id == post.user.id"
-          type="primary"
-          @click="click()"
-          >Edit post</a-button
-        >
+        <a-button type="primary" @click="$emit('editPost')">Edit post</a-button>
       </template>
       <!-- <template #datetime>
         <a-tooltip :title="dayjs().format('YYYY-MM-DD HH:mm:ss')">

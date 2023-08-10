@@ -45,6 +45,9 @@ export default {
         <p>
           {{ comment.content }}
         </p>
+        <a-button type="primary" @click="$emit('editComment', comment.id)"
+          >Edit comment</a-button
+        >
       </template>
       <!-- <template #datetime>
         <a-tooltip :title="dayjs().format('YYYY-MM-DD HH:mm:ss')">
