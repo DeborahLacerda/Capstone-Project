@@ -29,12 +29,7 @@ export default {
         </p>
         <a-button v-if="isUser==post.user.id" type="primary" @click="$emit('editPost')">Edit post</a-button>
       </template>
-      <!-- <template #datetime>
-        <a-tooltip :title="dayjs().format('YYYY-MM-DD HH:mm:ss')">
-          <span>{{ dayjs().fromNow() }}</span>
-        </a-tooltip>
-      </template> -->
-    </a-comment>
+       </a-comment>
   </a-card>
 </template>
 
@@ -52,5 +47,11 @@ export default {
 }
 button {
   margin-top: 2rem;
+  align-self: flex-end;
+  transition: background-color 0.3s;
 }
+button:hover {
+  background-color: #cbcdd0;
+}
+
 </style>

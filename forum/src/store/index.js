@@ -101,6 +101,7 @@ export default createStore({
       };
       try {
         await axios.post(`${baseUrl}/api/posts`, { ...post }, config);
+        alert("Post was created, Successfully.");
         return true;
       } catch (error) {
         alert(error);
@@ -113,6 +114,7 @@ export default createStore({
       };
       try {
         await axios.put(`${baseUrl}/api/posts/${post.id}`, { ...post }, config);
+        alert("Post updated, Successfully.");
         return true;
       } catch (error) {
         alert(error.response.data.error);
@@ -138,6 +140,7 @@ export default createStore({
       };
       try {
         await axios.delete(`${baseUrl}/api/posts/${id}`, config);
+        alert("Post deleted!");
         return true;
       } catch (error) {
         alert(error.response.data.error);
@@ -170,6 +173,7 @@ export default createStore({
           { ...infor },
           config
         );
+        alert("Comment was created!");
         return true;
       } catch (error) {
         alert(error);
@@ -186,6 +190,7 @@ export default createStore({
           { ...infor },
           config
         );
+        alert("Comment updated!");
         return true;
       } catch (error) {
         alert(error.response.data.error);
@@ -199,6 +204,7 @@ export default createStore({
       };
       try {
         await axios.delete(`${baseUrl}/api/comments/${id}`, config);
+        alert("Comment deleted!");
         return true;
       } catch (error) {
         alert(error.response.data.error);

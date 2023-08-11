@@ -59,4 +59,12 @@ button {
   justify-content: space-between;
   align-items: center;
 }
+button {
+  margin-top: 2rem;
+  align-self: flex-end;
+  transition: background-color 0.3s;
+}
+button:hover {
+  background-color: #cbcdd0;
+}
 </style>
