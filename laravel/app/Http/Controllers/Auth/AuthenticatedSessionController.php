@@ -19,13 +19,13 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        // return response()->noContent(); // REMOVED
-
         // creates user token
         $token = $request->user()->createToken('auth_token')->plainTextToken;
 
+        $user_id = $request->user()->id;
+
         // returns token as json
-        return response()->json(['token' => $token]);
+        return response()->json(['token' => $token, 'user_id' => $user_id]);
     }
 
     /**

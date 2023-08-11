@@ -2,16 +2,19 @@
 export default {
   data: () => ({
     formState: {
-      username: "",
+      email: "",
       password: "",
     },
   }),
   methods: {
-    onFinishFailed(errorInfo) {
-      console.log("Failed:", errorInfo);
-    },
-    onFinish(values) {
-      console.log("Success:", values);
+    goToRegister() {
+      this.$router.push({ path: "/register" }).then((res) => {
+        if (res) {
+          this.$router.push({
+            path: "/",
+          });
+        }
+      });
     },
   },
 };
@@ -19,21 +22,21 @@ export default {
 
 <template>
   <div>
+    <a-typography-title :level="2">Login</a-typography-title>
+
     <a-form
       :model="formState"
       name="basic"
       :label-col="{ span: 4 }"
       :wrapper-col="{ span: 16 }"
       autocomplete="off"
-      @finish="onFinish"
-      @finishFailed="onFinishFailed"
     >
       <a-form-item
-        label="Username"
-        name="username"
-        :rules="[{ required: true, message: 'Please input your username!' }]"
+        label="Email"
+        name="email"
+        :rules="[{ required: true, message: 'Please input your email!' }]"
       >
-        <a-input v-model:value="formState.username" />
+        <a-input v-model:value="formState.email" />
       </a-form-item>
 
       <a-form-item
@@ -44,8 +47,14 @@ export default {
         <a-input-password v-model:value="formState.password" />
       </a-form-item>
 
-      <a-form-item>
-        <a-button type="primary" html-type="submit">Submit</a-button>
+      <a-form-item class="centre_login">
+        <a-button
+          type="primary"
+          html-type="submit"
+          @click="$emit('loginForm', formState)"
+          >Login</a-button
+        >
+        <a-button type="link" @click="goToRegister()">Register now!</a-button>
       </a-form-item>
     </a-form>
   </div>
@@ -56,6 +65,12 @@ form {
   display: flex;
   flex-direction: column;
 }
-button {
+
+.centre_login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 </style>

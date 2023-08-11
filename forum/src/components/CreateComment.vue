@@ -1,0 +1,39 @@
+<script>
+export default {
+  data: () => ({
+    comment: "",
+  }),
+};
+</script>
+
+<template>
+  <a-card class="comment" :bordered="false" title="New comment">
+    <a-comment>
+      <template #content>
+        <a-textarea
+          v-model:value="comment"
+          :rows="4"
+          placeholder="Content.."
+          allow-clear
+        />
+        <a-button type="Primary" @click="$emit('newComment', comment)"
+          >Post</a-button
+        >
+      </template>
+    </a-comment>
+  </a-card>
+</template>
+
+<style scoped>
+.comment {
+  margin-bottom: 20px;
+}
+button {
+  margin-top: 2rem;
+  align-self: flex-end;
+  transition: background-color 0.3s;
+}
+button:hover {
+  background-color: #cbcdd0;
+}
+</style>

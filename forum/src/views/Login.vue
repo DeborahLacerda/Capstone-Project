@@ -5,12 +5,26 @@ export default {
   components: {
     Login,
   },
-  methods: {},
+  methods: {
+    login(userInfor) {
+      this.$store.dispatch("login", userInfor).then((res) => {
+        if (res) {
+          this.$router
+            .push({
+              path: "/",
+            })
+            .then(() => {
+              this.$router.go();
+            });
+        }
+      });
+    },
+  },
 };
 </script>
 
 <template>
-  <Login />
+  <Login @loginForm="login($event)" />
 </template>
 
 <style scoped></style>

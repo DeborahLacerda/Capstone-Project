@@ -42,8 +42,14 @@ class CommentController extends Controller
     }
 
 
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
+        $comment = Comment::find($id);
+
+        if ($request->user()->id !== $comment->user_id) {
+            return response()->json(['error' => 'You can only remove your own comments.'], 403);
+        }
+
         $comment = Comment::find($id);
         $comment->delete();
 

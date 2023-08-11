@@ -59,8 +59,14 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
+        $post = Post::find($id);
+
+        if ($request->user()->id !== $post->user_id) {
+            return response()->json(['error' => 'You can only remove your own Posts.'], 403);
+        }
+
         $post = Post::find($id);
         $post->delete();
 

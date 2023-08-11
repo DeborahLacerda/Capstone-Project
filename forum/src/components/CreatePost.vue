@@ -40,6 +40,11 @@ export default {
   padding: 30px;
 }
 button {
-  margin-top: 10px;
+  margin-top: 2rem;
+  align-self: flex-end;
+  transition: background-color 0.3s;
+}
+button:hover {
+  background-color: #cbcdd0;
 }
 </style>

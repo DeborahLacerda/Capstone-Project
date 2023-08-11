@@ -1,11 +1,13 @@
 import { createStore } from "vuex";
 import axios from "axios";
 
-const token = "2|nytnonmMDbNOn7Sz9WKK0FtenGrTZISoQJenlGvP";
+const baseUrl = "http://127.0.0.1:8000";
 
 export default createStore({
   state: {
     users: [],
+    user: {},
+    token: localStorage.getItem("token") || "",
     posts: [],
     post: null,
     comments: [],
@@ -18,71 +20,113 @@ export default createStore({
   },
 
   actions: {
-    async fetchUsers({ commit }) {
+    async login({ commit }, userInfor) {
+      try {
+        const data = await axios.post(`${baseUrl}/login`, {
+          email: userInfor.email,
+          password: userInfor.password,
+        });
+        commit("SET_LOGGED_USER_ID", data.data.user_id);
+        commit("SET_TOKEN", data.data.token);
+        return true;
+      } catch (error) {
+        alert(error.response.data.message);
+      }
+    },
+    async logout({ state }) {
+      try {
+        localStorage.clear();
+        return true;
+      } catch (error) {
+        alert(error);
+      }
+    },
+    async createUser({ commit }, userInfor) {
+      try {
+        const data = await axios.post(`${baseUrl}/register`, {
+          ...userInfor,
+        });
+        commit("SET_LOGGED_USER_ID", data.data.user_id);
+        commit("SET_TOKEN", data.data.token);
+        return true;
+      } catch (error) {
+        console.log(error);
+        alert(error);
+        alert(error.response.data.message);
+      }
+    },
+    async getUser({ commit, state }, id) {
       const config = {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${state.token}` },
       };
       try {
-        const data = await axios.get("http://127.0.0.1:8000/api/users", config);
-        commit("SET_USERS", data.data.data);
+        const data = await axios.get(`${baseUrl}/api/users/${id}`, config);
+        commit("SET_USER", data.data.data);
+        return true;
       } catch (error) {
         alert(error);
         console.log(error);
       }
     },
-    async fetchPosts({ commit }) {
+    async editUser({ state }, user) {
+      console.log(user);
       const config = {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${state.token}` },
       };
       try {
-        const data = await axios.get("http://127.0.0.1:8000/api/posts", config);
+        await axios.put(`${baseUrl}/api/users/${user.id}`, { ...user }, config);
+        alert("User info was updated, Successfully");
+        return true;
+      } catch (error) {
+        alert(error.response.data.error);
+        console.log(error);
+      }
+    },
+
+    async fetchPosts({ commit, state }) {
+      const config = {
+        headers: { Authorization: `Bearer ${state.token}` },
+      };
+      try {
+        const data = await axios.get(`${baseUrl}/api/posts`, config);
         commit("SET_POSTS", data.data.data);
       } catch (error) {
         alert(error);
         console.log(error);
       }
     },
-    async createPosts({}, { post }) {
+    async createPosts({ state }, { post }) {
       const config = {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${state.token}` },
       };
       try {
-        await axios.post(
-          "http://127.0.0.1:8000/api/posts",
-          { ...post },
-          config
-        );
+        await axios.post(`${baseUrl}/api/posts`, { ...post }, config);
+        alert("Post was created, Successfully.");
         return true;
       } catch (error) {
         alert(error);
         console.log(error);
       }
     },
-    async editPosts({}, { post }) {
+    async editPost({ state }, { post }) {
       const config = {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${state.token}` },
       };
       try {
-        await axios.put(
-          `http://127.0.0.1:8000/api/posts/${post.id}`,
-          { ...post },
-          config
-        );
+        await axios.put(`${baseUrl}/api/posts/${post.id}`, { ...post }, config);
+        alert("Post updated, Successfully.");
         return true;
       } catch (error) {
-        alert(error);
+        alert(error.response.data.error);
         console.log(error);
       }
     },
-    async getPost({ commit }, id) {
+    async getPost({ commit, state }, id) {
       const config = {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${state.token}` },
       };
       try {
-        const data = await axios.get(
-          `http://127.0.0.1:8000/api/posts/${id}`,
-          config
-        );
+        const data = await axios.get(`${baseUrl}/api/posts/${id}`, config);
         commit("SET_SINGLE_POST", data.data.data);
         return true;
       } catch (error) {
@@ -90,13 +134,26 @@ export default createStore({
         console.log(error);
       }
     },
-    async fetchComments({ commit }, id) {
+    async deletePost({ commit, state }, id) {
       const config = {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${state.token}` },
+      };
+      try {
+        await axios.delete(`${baseUrl}/api/posts/${id}`, config);
+        alert("Post deleted!");
+        return true;
+      } catch (error) {
+        alert(error.response.data.error);
+        console.log(error);
+      }
+    },
+    async fetchComments({ commit, state }, id) {
+      const config = {
+        headers: { Authorization: `Bearer ${state.token}` },
       };
       try {
         const data = await axios.get(
-          `http://127.0.0.1:8000/api/post/${id}/comments`,
+          `${baseUrl}/api/post/${id}/comments`,
           config
         );
         commit("SET_COMMENTS", data.data.data);
@@ -106,10 +163,68 @@ export default createStore({
         console.log(error);
       }
     },
+    async createComments({ state }, { infor }) {
+      const config = {
+        headers: { Authorization: `Bearer ${state.token}` },
+      };
+      try {
+        await axios.post(
+          `${baseUrl}/api/post/${infor.post_id}/comments`,
+          { ...infor },
+          config
+        );
+        alert("Comment was created!");
+        return true;
+      } catch (error) {
+        alert(error);
+        console.log(error);
+      }
+    },
+    async editComments({ commit, state }, infor) {
+      const config = {
+        headers: { Authorization: `Bearer ${state.token}` },
+      };
+      try {
+        await axios.put(
+          `${baseUrl}/api/comments/${infor.id}`,
+          { ...infor },
+          config
+        );
+        alert("Comment updated!");
+        return true;
+      } catch (error) {
+        alert(error.response.data.error);
+
+        console.log(error);
+      }
+    },
+    async deleteComment({ commit, state }, id) {
+      const config = {
+        headers: { Authorization: `Bearer ${state.token}` },
+      };
+      try {
+        await axios.delete(`${baseUrl}/api/comments/${id}`, config);
+        alert("Comment deleted!");
+        return true;
+      } catch (error) {
+        alert(error.response.data.error);
+        console.log(error);
+      }
+    },
   },
   mutations: {
+    SET_LOGGED_USER_ID(state, id) {
+      localStorage.setItem("user_id", id);
+    },
+    SET_TOKEN(state, token) {
+      localStorage.setItem("token", token);
+      state.token = token;
+    },
     SET_USERS(state, users) {
       state.users = users;
+    },
+    SET_USER(state, user) {
+      state.user = user;
     },
     SET_POSTS(state, posts) {
       state.posts = posts;
