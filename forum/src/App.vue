@@ -5,13 +5,28 @@ export default {
   components: {
     Navbar,
   },
+  methods: {
+    logoutUser() {
+      this.$store.dispatch("logout").then((res) => {
+        if (res) {
+          this.$router
+            .push({
+              path: "/",
+            })
+            .then(() => {
+              this.$router.go();
+            });
+        }
+      });
+    },
+  },
 };
 </script>
 
 <template>
   <a-layout class="site-layout-content">
     <a-layout-header>
-      <Navbar />
+      <Navbar @logout="logoutUser()" />
     </a-layout-header>
 
     <a-layout-content class="content">

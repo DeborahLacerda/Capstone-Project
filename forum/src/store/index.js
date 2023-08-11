@@ -24,10 +24,16 @@ export default createStore({
           email: userInfor.email,
           password: userInfor.password,
         });
-        //rever
-        console.log(data.data);
         commit("SET_LOGGED_USER_ID", data.data.user_id);
         commit("SET_TOKEN", data.data.token);
+        return true;
+      } catch (error) {
+        alert(error.response.data.message);
+      }
+    },
+    async logout({ state }) {
+      try {
+        localStorage.clear();
         return true;
       } catch (error) {
         alert(error);
@@ -43,6 +49,51 @@ export default createStore({
         return true;
       } catch (error) {
         alert(error);
+        console.log(error);
+      }
+    },
+    async getUser({ commit, state }, id) {
+      const config = {
+        headers: { Authorization: `Bearer ${state.token}` },
+      };
+      try {
+        const data = await axios.get(
+          `http://127.0.0.1:8000/api/users/${id}`,
+          config
+        );
+        commit("SET_USER", data.data.data);
+        return true;
+      } catch (error) {
+        alert(error);
+        console.log(error);
+      }
+    },
+    async editUser({ state }, user) {
+      console.log(user);
+      const config = {
+        headers: { Authorization: `Bearer ${state.token}` },
+      };
+      try {
+        await axios.put(
+          `http://127.0.0.1:8000/api/users/${user.id}`,
+          { ...user },
+          config
+        );
+        return true;
+      } catch (error) {
+        alert(error.response.data.error);
+        console.log(error);
+      }
+    },
+    async deleteUser({ commit, state }, id) {
+      const config = {
+        headers: { Authorization: `Bearer ${state.token}` },
+      };
+      try {
+        await axios.delete(`http://127.0.0.1:8000/api/users/${id}`, config);
+        return true;
+      } catch (error) {
+        alert(error.response.data.error);
         console.log(error);
       }
     },
@@ -202,6 +253,9 @@ export default createStore({
     },
     SET_USERS(state, users) {
       state.users = users;
+    },
+    SET_USER(state, user) {
+      state.user = user;
     },
     SET_POSTS(state, posts) {
       state.posts = posts;

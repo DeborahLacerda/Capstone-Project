@@ -9,9 +9,13 @@ export default {
     login(userInfor) {
       this.$store.dispatch("login", userInfor).then((res) => {
         if (res) {
-          this.$router.push({
-            path: "/",
-          });
+          this.$router
+            .push({
+              path: "/",
+            })
+            .then(() => {
+              this.$router.go();
+            });
         }
       });
     },

@@ -1,13 +1,18 @@
 <script>
 export default {
+  props: {
+    infor: Object,
+    default: () => {},
+  },
   data: () => ({
     formState: {
       email: "",
       name: "",
-      password: "",
-      password_confirmation: "",
     },
   }),
+  beforeMount() {
+    this.formState = { ...this.infor };
+  },
   methods: {},
 };
 </script>
@@ -37,28 +42,12 @@ export default {
         <a-input v-model:value="formState.email" />
       </a-form-item>
 
-      <a-form-item
-        label="Password"
-        name="password"
-        :rules="[{ required: true, message: 'Please input your password!' }]"
-      >
-        <a-input-password v-model:value="formState.password" />
-      </a-form-item>
-
-      <a-form-item
-        label="Password Confirmation"
-        name="password_confirmation"
-        :rules="[{ required: true, message: 'Please input your password!' }]"
-      >
-        <a-input-password v-model:value="formState.password_confirmation" />
-      </a-form-item>
-
       <a-form-item>
         <a-button
           type="primary"
           html-type="submit"
-          @click="$emit('createForm', formState)"
-          >Create</a-button
+          @click="$emit('editUser', formState)"
+          >Edit</a-button
         >
       </a-form-item>
     </a-form>
@@ -69,7 +58,5 @@ export default {
 form {
   display: flex;
   flex-direction: column;
-}
-button {
 }
 </style>

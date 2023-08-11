@@ -6,15 +6,17 @@ export default {
     Post,
   },
   computed: {
-    // getPosts() {
-    //   return this.$store.getters.getPosts;
-    // },
     posts() {
       return this.$store.state.posts;
     },
   },
   mounted() {
-    this.$store.dispatch("fetchPosts");
+    const token = localStorage.getItem("token");
+    if (token) {
+      this.$store.dispatch("fetchPosts");
+    } else {
+      this.$router.push({ path: "/login" });
+    }
   },
   methods: {
     goToPostDetails(id) {
