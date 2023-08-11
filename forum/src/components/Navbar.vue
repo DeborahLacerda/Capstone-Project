@@ -32,9 +32,9 @@ export default {
 };
 </script>
 <template>
-  <div v-if="userId" class="nav">
-    <p @click="goToHome()">Home</p>
-    <div>
+  <div class="nav">
+    <img src="../assets/logo.png" alt="" />
+    <div v-if="userId">
       <a-button type="primary" @click="click()">Create post</a-button>
 
       <a-button @click="$emit('logout')">Logout</a-button>
@@ -57,4 +57,7 @@ button {
   margin-left: 10px;
 }
 
+img {
+  width: 85px;
+}
 </style>
