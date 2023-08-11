@@ -28,11 +28,11 @@ export default {
           >Edit comment</a-button
         >
       </template>
-      <template #datetime>
+      <!-- <template #datetime>
         <a-tooltip :title="dayjs().format('YYYY-MM-DD HH:mm:ss')">
           <span>{{ dayjs().fromNow() }}</span>
         </a-tooltip>
-      </template>
+      </template> -->
     </a-comment>
   </a-card>
 </template>

@@ -14,6 +14,8 @@ export default {
 
 <template>
   <div>
+    <a-typography-title :level="2">Register</a-typography-title>
+
     <a-form
       :model="formState"
       name="basic"
@@ -53,13 +55,19 @@ export default {
         <a-input-password v-model:value="formState.password_confirmation" />
       </a-form-item>
 
-      <a-form-item>
+      <a-form-item class="centre_login">
         <a-button
           type="primary"
           html-type="submit"
           @click="$emit('createForm', formState)"
           >Create</a-button
         >
+        <a-button
+          type="link"
+          @click="$emit('cancel')"
+          >Cancel</a-button
+        >
+        
       </a-form-item>
     </a-form>
   </div>
@@ -70,6 +78,12 @@ form {
   display: flex;
   flex-direction: column;
 }
-button {
+
+.centre_login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 </style>

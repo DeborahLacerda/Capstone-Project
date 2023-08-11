@@ -59,4 +59,7 @@ form {
   display: flex;
   flex-direction: column;
 }
+button {
+  margin-left: 10px;
+}
 </style>

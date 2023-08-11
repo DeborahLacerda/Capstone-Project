@@ -1,6 +1,8 @@
 import { createStore } from "vuex";
 import axios from "axios";
 
+const baseUrl = "http://127.0.0.1:8000";
+
 export default createStore({
   state: {
     users: [],
@@ -20,7 +22,7 @@ export default createStore({
   actions: {
     async login({ commit }, userInfor) {
       try {
-        const data = await axios.post("http://127.0.0.1:8000/login", {
+        const data = await axios.post(`${baseUrl}/login`, {
           email: userInfor.email,
           password: userInfor.password,
         });
@@ -41,15 +43,16 @@ export default createStore({
     },
     async createUser({ commit }, userInfor) {
       try {
-        const data = await axios.post("http://127.0.0.1:8000/register", {
+        const data = await axios.post(`${baseUrl}/register`, {
           ...userInfor,
         });
         commit("SET_LOGGED_USER_ID", data.data.user_id);
         commit("SET_TOKEN", data.data.token);
         return true;
       } catch (error) {
-        alert(error);
         console.log(error);
+        alert(error);
+        alert(error.response.data.message);
       }
     },
     async getUser({ commit, state }, id) {
@@ -57,10 +60,7 @@ export default createStore({
         headers: { Authorization: `Bearer ${state.token}` },
       };
       try {
-        const data = await axios.get(
-          `http://127.0.0.1:8000/api/users/${id}`,
-          config
-        );
+        const data = await axios.get(`${baseUrl}/api/users/${id}`, config);
         commit("SET_USER", data.data.data);
         return true;
       } catch (error) {
@@ -74,47 +74,21 @@ export default createStore({
         headers: { Authorization: `Bearer ${state.token}` },
       };
       try {
-        await axios.put(
-          `http://127.0.0.1:8000/api/users/${user.id}`,
-          { ...user },
-          config
-        );
+        await axios.put(`${baseUrl}/api/users/${user.id}`, { ...user }, config);
+        alert("User info was updated, Successfully");
         return true;
       } catch (error) {
         alert(error.response.data.error);
         console.log(error);
       }
     },
-    async deleteUser({ commit, state }, id) {
-      const config = {
-        headers: { Authorization: `Bearer ${state.token}` },
-      };
-      try {
-        await axios.delete(`http://127.0.0.1:8000/api/users/${id}`, config);
-        return true;
-      } catch (error) {
-        alert(error.response.data.error);
-        console.log(error);
-      }
-    },
-    async fetchUsers({ commit, state }) {
-      const config = {
-        headers: { Authorization: `Bearer ${state.token}` },
-      };
-      try {
-        const data = await axios.get("http://127.0.0.1:8000/api/users", config);
-        commit("SET_USERS", data.data.data);
-      } catch (error) {
-        alert(error);
-        console.log(error);
-      }
-    },
+
     async fetchPosts({ commit, state }) {
       const config = {
         headers: { Authorization: `Bearer ${state.token}` },
       };
       try {
-        const data = await axios.get("http://127.0.0.1:8000/api/posts", config);
+        const data = await axios.get(`${baseUrl}/api/posts`, config);
         commit("SET_POSTS", data.data.data);
       } catch (error) {
         alert(error);
@@ -126,11 +100,7 @@ export default createStore({
         headers: { Authorization: `Bearer ${state.token}` },
       };
       try {
-        await axios.post(
-          "http://127.0.0.1:8000/api/posts",
-          { ...post },
-          config
-        );
+        await axios.post(`${baseUrl}/api/posts`, { ...post }, config);
         return true;
       } catch (error) {
         alert(error);
@@ -142,11 +112,7 @@ export default createStore({
         headers: { Authorization: `Bearer ${state.token}` },
       };
       try {
-        await axios.put(
-          `http://127.0.0.1:8000/api/posts/${post.id}`,
-          { ...post },
-          config
-        );
+        await axios.put(`${baseUrl}/api/posts/${post.id}`, { ...post }, config);
         return true;
       } catch (error) {
         alert(error.response.data.error);
@@ -158,10 +124,7 @@ export default createStore({
         headers: { Authorization: `Bearer ${state.token}` },
       };
       try {
-        const data = await axios.get(
-          `http://127.0.0.1:8000/api/posts/${id}`,
-          config
-        );
+        const data = await axios.get(`${baseUrl}/api/posts/${id}`, config);
         commit("SET_SINGLE_POST", data.data.data);
         return true;
       } catch (error) {
@@ -174,7 +137,7 @@ export default createStore({
         headers: { Authorization: `Bearer ${state.token}` },
       };
       try {
-        await axios.delete(`http://127.0.0.1:8000/api/posts/${id}`, config);
+        await axios.delete(`${baseUrl}/api/posts/${id}`, config);
         return true;
       } catch (error) {
         alert(error.response.data.error);
@@ -187,7 +150,7 @@ export default createStore({
       };
       try {
         const data = await axios.get(
-          `http://127.0.0.1:8000/api/post/${id}/comments`,
+          `${baseUrl}/api/post/${id}/comments`,
           config
         );
         commit("SET_COMMENTS", data.data.data);
@@ -203,7 +166,7 @@ export default createStore({
       };
       try {
         await axios.post(
-          `http://127.0.0.1:8000/api/post/${infor.post_id}/comments`,
+          `${baseUrl}/api/post/${infor.post_id}/comments`,
           { ...infor },
           config
         );
@@ -219,7 +182,7 @@ export default createStore({
       };
       try {
         await axios.put(
-          `http://127.0.0.1:8000/api/comments/${infor.id}`,
+          `${baseUrl}/api/comments/${infor.id}`,
           { ...infor },
           config
         );
@@ -235,7 +198,7 @@ export default createStore({
         headers: { Authorization: `Bearer ${state.token}` },
       };
       try {
-        await axios.delete(`http://127.0.0.1:8000/api/comments/${id}`, config);
+        await axios.delete(`${baseUrl}/api/comments/${id}`, config);
         return true;
       } catch (error) {
         alert(error.response.data.error);

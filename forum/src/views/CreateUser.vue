@@ -7,14 +7,22 @@ export default {
   },
   methods: {
     create(userInfor) {
-      this.$store.dispatch("createUser", userInfor);
+      this.$store.dispatch("createUser", userInfor).then((res) => {
+        if (res) {
+          this.$router.push({path: '/'})
+        }
+      });
     },
+    cancel(){
+      this.$router.push({path: '/'})
+    }
   },
 };
 </script>
 
 <template>
-  <CreateUser @createForm="create($event)" />
+  <CreateUser @createForm="create($event)"
+   @cancel="cancel()"/>
 </template>
 
 <style scoped></style>

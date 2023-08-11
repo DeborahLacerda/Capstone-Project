@@ -26,7 +26,5 @@ const users = computed(() => {
   return store.state.users;
 });
 
-onMounted(() => {
-  store.dispatch("fetchUsers");
-});
+
 </script>
