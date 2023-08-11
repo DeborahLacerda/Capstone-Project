@@ -72,7 +72,7 @@ export default createStore({
     },
     async createPosts({ state }, { post }) {
       const config = {
-        headers: { Authorization: `Bearer ${(state, token)}` },
+        headers: { Authorization: `Bearer ${state.token}` },
       };
       try {
         await axios.post(
@@ -195,7 +195,6 @@ export default createStore({
   mutations: {
     SET_LOGGED_USER_ID(state, id) {
       localStorage.setItem("user_id", id);
-      state.user = user;
     },
     SET_TOKEN(state, token) {
       localStorage.setItem("token", token);

@@ -5,6 +5,11 @@ export default {
     comment: Object,
     default: () => {},
   },
+  computed: {
+    isUser() {
+      return localStorage.getItem('user_id')
+    }
+  }
 };
 </script>
 
@@ -45,7 +50,7 @@ export default {
         <p>
           {{ comment.content }}
         </p>
-        <a-button type="primary" @click="$emit('editComment', comment.id)"
+        <a-button v-if="isUser==comment.user.id" type="primary" @click="$emit('editComment', comment.id)"
           >Edit comment</a-button
         >
       </template>
@@ -58,4 +63,8 @@ export default {
   </a-card>
 </template>
 
-<style scoped></style>
+<style scoped>
+button {
+  margin-top: 2rem;
+}
+</style>
