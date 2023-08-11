@@ -33,7 +33,7 @@ export default {
 </script>
 <template>
   <div class="nav">
-    <img src="../assets/logo.png" alt="" />
+    <img src="../assets/logo.png" @click="goToHome()" alt="" />
     <div v-if="userId">
       <a-button type="primary" @click="click()">Create post</a-button>
 
@@ -59,5 +59,6 @@ button {
 
 img {
   width: 85px;
+  cursor: pointer;
 }
 </style>
